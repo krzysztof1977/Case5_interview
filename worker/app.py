@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2 import sql
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
