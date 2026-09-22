@@ -1,16 +1,17 @@
 import os
+import psycopg2
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
 
 def get_connection():
-    """TODO: connect to Postgres using psycopg2.
-
-    Connection details are provided via the DB_HOST, DB_NAME, DB_USER and
-    DB_PASSWORD environment variables (see docker-compose.yml).
-    """
-    raise NotImplementedError
+    return psycopg2.connect(
+        host=os.environ["DB_HOST"],
+        dbname=os.environ["DB_NAME"],
+        user=os.environ["DB_USER"],
+        password=os.environ["DB_PASSWORD"],
+    )
 
 
 @app.route("/internal/provision", methods=["POST"])
