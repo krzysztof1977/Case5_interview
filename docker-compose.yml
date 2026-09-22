@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpass
+      POSTGRES_DB: platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  worker:
+    image: python:3.11-slim
+    container_name: worker
+    depends_on:
+      - postgres
+    volumes:
+      - ./worker:/app
+    working_dir: /app
+    command: sh -c "pip install --no-cache-dir flask psycopg2-binary && python app.py"
+    ports:
+      - "8001:8001"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: platform
+      DB_USER: admin
+      DB_PASSWORD: adminpass
+
+  api:
+    image: python:3.11-slim
+    container_name: api
+    depends_on:
+      - worker
+    volumes:
+      - ./api:/app
+    working_dir: /app
+    command: sh -c "pip install --no-cache-dir flask requests && python app.py"
+    ports:
+      - "8000:8000"
+    environment:
+      WORKER_URL: http://worker:8001
+
+volumes:
+  postgres-data:
