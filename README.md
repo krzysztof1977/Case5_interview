@@ -47,12 +47,6 @@ Implement the missing logic in `api/app.py` and `worker/app.py` so that:
 4. Basic error handling: a missing `team_name`, and the case where `worker`
    is unreachable or returns an error.
 
-## Running it
-
-```
-docker compose up
-```
-
 ## Testing your solution
 
 ```
@@ -61,14 +55,3 @@ curl -X POST http://localhost:8000/provision \
   -d '{"team_name": "analytics"}'
 ```
 
-Verify the schema was created:
-
-```
-docker exec -it postgres psql -U admin -d platform -c "\dn"
-```
-
-## Bonus / discussion (not required to implement)
-
-`team_name` comes straight from the client. What could go wrong if it were
-used to build a SQL statement naively, and how would you protect against
-it?
